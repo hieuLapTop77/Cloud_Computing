@@ -1,0 +1,39 @@
+version: '3'
+services:
+  db:
+    image: 'mysql:latest'
+    container_name: Database
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=StudentManagement
+      - MYSQL_USER=sa
+      - MYSQL_PASSWORD=password
+    ports:
+      - 33061:3306
+  web:
+    container_name: 18133012/backend
+    build: 
+      dockerfile: Dockerfile
+      context: ./Backend/
+    image: '18133012/backend:latest'
+    container_name: Backend
+    restart: on-failure
+    depends_on:
+      - db
+    ports:
+      - 8086:8086
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_USER=sa
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=StudentManagement
+      - DATABASE_PORT=33061
+  ui:
+    container_name: 18133012/frontend
+    build: 
+      dockerfile: Dockerfile
+      context: ./Frontend
+    image: '18133012/frontend:latest'
+    container_name: Frontend
+    ports:
+      - 57000:80
